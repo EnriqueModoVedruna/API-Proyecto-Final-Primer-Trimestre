@@ -8,20 +8,22 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "developers")
-@Data
-@NoArgsConstructor
+@Table(name = "developers") // Hacemos relacion con la tabla developers
+@Data // Importamos Lombok
+@NoArgsConstructor // Creamos los constructores sin argumento
 public class Developers {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="dev_id", nullable= false)
-    Integer id;
+    Integer id; // Generamos el campo ID, decimos que autogenere este campo, lo relacionamos con la tabla y utilizamos Integer
 
     @Column(name="dev_name", nullable = false)
     String nombre;
@@ -38,7 +40,12 @@ public class Developers {
     @Column(name="github_url")
     String githubUrl;
 
-    @OneToMany(fetch= FetchType.LAZY, mappedBy="desarrollador")
-    List<DWOP> proyectos;
+    @ManyToMany(fetch= FetchType.LAZY) // Hacemos la relacion ManyToMany, indicando la tabla intermedia
+    @JoinTable(
+        name = "developers_worked_on_projects", // Nombre de la tabla intermedia
+        joinColumns = @JoinColumn(name = "developers_dev_id"), // Columna de esta entidad en la tabla intermedia
+        inverseJoinColumns = @JoinColumn(name = "projects_project_id") // Columna de la otra entidad en la tabla intermedia
+    )
+    List<Projects> proyectosDesarrolladores;
 
 }

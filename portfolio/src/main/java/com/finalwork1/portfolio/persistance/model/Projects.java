@@ -1,14 +1,14 @@
 package com.finalwork1.portfolio.persistance.model;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,10 +30,12 @@ public class Projects {
     String descripcion;
 
     @Column(name="start_date", nullable = false)
-    String fechaInicio;
+    // String... Este string lo dejé comentado porque previamente usaba el campo String para definir las fechas
+    // pero vi mas adecuado utilizar el LocalDate
+    LocalDate fechaInicio;
 
     @Column(name="end_date")
-    String fechaFin;
+    LocalDate fechaFin;
 
     @Column(name="repository_url", nullable = false)
     String urlRepositorio;
@@ -45,11 +47,11 @@ public class Projects {
     String foto;
 
     @Column(name="status_status_id", nullable = false)
-    String statusId;
+    Integer statusId;
 
-    @OneToMany(fetch= FetchType.LAZY, mappedBy="proyecto")
-    List<DWOP> proyectosDWOP;
+    @ManyToMany(mappedBy="proyectosDesarrolladores") // Indicamos en la relacion ManyToMany el nombre de la lista Proyectos que creamos en la Tabla Developers
+    List<Developers> proyectosDWOP;
     
-    @OneToMany(fetch= FetchType.LAZY, mappedBy="proyecto")
-    List<TUIP> proyectosTUIP;
+    @ManyToMany(mappedBy="proyectosTecnologias") // Lo mismo, pero esta vez en la tabla Technologies
+    List<Technologies> proyectosTUIP;
 }
